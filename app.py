@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 # Title of the app
-st.title("app")
+st.title("Real-Time Image Capture or Upload")
 
 # Select mode: Capture Image from webcam or Upload
 mode = st.selectbox("Select mode:", ["Capture from Webcam", "Upload an Image"])
@@ -23,9 +23,10 @@ if mode == "Capture from Webcam":
         
         captured_image = None
 
-        while cap.isOpened():
+        while True:
             ret, frame = cap.read()
             if not ret:
+                st.write("Failed to capture image.")
                 break
             
             # Show the live frame in Streamlit
@@ -41,7 +42,6 @@ if mode == "Capture from Webcam":
 
         # Release the webcam
         cap.release()
-        cv2.destroyAllWindows()
 
         if captured_image is not None:
             st.write("Captured Image:")
