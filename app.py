@@ -25,6 +25,8 @@ if mode == "Capture from Webcam":
 
         while True:
             ret, frame = cap.read()
+            if ret:
+                 st.write("image.png", frame)
             if not ret:
                 st.write("Failed to capture image.")
                 break
@@ -43,10 +45,10 @@ if mode == "Capture from Webcam":
         # Release the webcam
         cap.release()
 
-        if captured_image is not None:
-            st.write("Captured Image:")
-            captured_image_rgb = cv2.cvtColor(captured_image, cv2.COLOR_BGR2RGB)
-            st.image(captured_image_rgb, channels="RGB")
+        # if captured_image is not None:
+        #     st.write("Captured Image:")
+        #     captured_image_rgb = cv2.cvtColor(captured_image, cv2.COLOR_BGR2RGB)
+        #     st.image(captured_image_rgb, channels="RGB")
 
 # If the user selects "Upload an Image"
 elif mode == "Upload an Image":
