@@ -9,13 +9,13 @@ from config import API_KEY, MODEL_NAME
 import time
 
 
-def extract_category(response: str) -> str:
-    """Extract category from model's response, handling errors."""
-    try:
-        json_data = json.loads(response[response.find('{'):response.find('}')+1])
-        return json_data.get('category', "Information Not Enough")
-    except (json.JSONDecodeError, ValueError):
-        return "Information Not Enough"
+# def extract_category(response: str) -> str:
+#     """Extract category from model's response, handling errors."""
+#     try:
+#         json_data = json.loads(response[response.find('{'):response.find('}')+1])
+#         return json_data.get('category', "Information Not Enough")
+#     except (json.JSONDecodeError, ValueError):
+#         return "Information Not Enough"
     
 
 def encode_image(image_path):
@@ -47,7 +47,7 @@ def invoke_model(image, prompt,api_key =API_KEY,model_name= MODEL_NAME):
             ],
             model=model_name, response_format={"type": "json_object"}
         )
-        return extract_category(chat_completion.choices[0].message.content)
+        return chat_completion.choices[0].message.content
     except Exception as e:
         error_string = str(e)
         if "429" in error_string:
@@ -74,7 +74,7 @@ def invoke_model(image, prompt,api_key =API_KEY,model_name= MODEL_NAME):
                     ],
                     model="llama-3.1-8b-instant"
                 )
-            return extract_category(chat_completion.choices[0].message.content)
+            return chat_completion.choices[0].message.content
         elif "413" in error_string:
             return "Decrease the content size to long for processing"
         else:
@@ -93,27 +93,4 @@ def invoke_model_w_31(prompt,api_key =API_KEY,model_name= "llama-3.1-8b-instant"
                     ],
                     model="llama-3.1-8b-instant"
                 )
-    return extract_category(chat_completion.choices[0].message.content)
-
-# def invoke_model_wo_json(image, prompt,api_key =API_KEY,model_name= MODEL_NAME):
-#     client = Groq(api_key=api_key)
-
-#     base64_image = encode_image(image)
-#     image_content = {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{base64_image}"}}
-
-#     try:
-#         chat_completion = client.chat.completions.create(
-#             messages=[
-#                 {
-#                     "role": "user",
-#                     "content": [
-#                         {"type": "text", "text": prompt},
-#                         image_content,
-#                     ],
-#                 }
-#             ],
-#             model=model_name
-#         )
-#         return extract_category(chat_completion.choices[0].message.content)
-#     except Exception as e:
-#         return f"Error: {str(e)}"
+    return chat_completion.choices[0].message.content
